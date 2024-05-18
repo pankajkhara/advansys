@@ -109,11 +109,18 @@ namespace MachineParts
 
         public void AddJobToDb(DBJob job)
         {
-            using (var context = new ApplicationDbContext())
+            try
             {
-                context.Database.EnsureCreated();
-                JobRepo repo = new JobRepo(context);
-                repo.Add(job);
+                using (var context = new ApplicationDbContext())
+                {
+                    context.Database.EnsureCreated();
+                    JobRepo repo = new JobRepo(context);
+                    repo.Add(job);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
