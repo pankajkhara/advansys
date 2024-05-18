@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="  &#xD;&#xA;      &#xD;&#xA;&#xD;&#xA;     Database">
+    <Position X="12.146" Y="4.219" Height="1.417" Width="1.169" />
+  </Comment>
+  <Class Name="MachineParts.DBJob">
+    <Position X="7.5" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAAAAAAAAAAAAAAAAIAAgAAAAABAAAAAAAAA=</HashCode>
+      <FileName>DBJob.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineParts.ApplicationDbContext">
+    <Position X="9.75" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DBJob.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineParts.IComponent">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAACAAAAAAACAAAAQAACAAAAAIIAAAAAAAAAA=</HashCode>
+      <FileName>IComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineParts.InspectComponent">
+    <Position X="7" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAACAAAAAAACAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>InspectComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineParts.JobRepo">
+    <Position X="12" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAAAAAAAAAAQAAAAAAAEAAAAAAgAAAAAAAIA=</HashCode>
+      <FileName>JobRepo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineParts.MainComponent">
+    <Position X="3" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAIAAACAAgAQAACAACBAEAAACAAAAAAA=</HashCode>
+      <FileName>MainComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineParts.MillComponent">
+    <Position X="5" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAICACAAAAAAACAAAAAAAiAgABAAMAAAAAAIIIA=</HashCode>
+      <FileName>MillComponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineParts.SensorStream">
+    <Position X="9.5" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAACAAAIAAAAEAAAEA=</HashCode>
+      <FileName>SensorStream.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
