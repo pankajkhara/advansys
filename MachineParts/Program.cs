@@ -10,7 +10,7 @@ namespace MachineParts
         {
             try
             {
-                File.Delete("localdatabase.db");
+                File.Delete("localdatabase.db"); // destroying every time to avoid
             }
             catch (Exception ex)
             {
@@ -18,10 +18,7 @@ namespace MachineParts
                 Console.WriteLine(ex.ToString());
             }
             
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
+            var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
 
 
             List<MillComponent> components = new List<MillComponent>();
@@ -53,7 +50,7 @@ namespace MachineParts
                 mainComponent.CancelJob(); // test of prioritization and round trip command feedback
                
 
-                //test stop stream and cleanup
+                //test stop stream and cleanup code
                 //foreach (var mill in components)
                 //{
                 //    mill.StopStream();

@@ -103,7 +103,7 @@ namespace MachineParts
                     SendMessage(message);
                 }
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 10; i++) // simulate work 
                 {
                     Thread.Sleep(1000);
                     if (GetCancelFlag() == 1)
