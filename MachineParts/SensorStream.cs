@@ -9,7 +9,7 @@ namespace MachineParts
 {
     public class SensorStream
     {
-        private Timer? timer_;
+        private Timer? timer_; // used timer to simulate stream
         public event Action<string>? temperatureCallBck_;
         double temeperature = 25;
         public void Start()

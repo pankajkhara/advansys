@@ -10,11 +10,11 @@ namespace MachineParts
     internal class MillComponent : IComponent
     {
         int jobId_ = -1;
-        static int cancel_ = 0;
-        private static readonly object lock_ = new object();
+        int cancel_ = 0;
+        private readonly object lock_ = new object();
         string[] status_ = new string[] { "MillStarted", "JobStart", "JobFinish", "MillStopped" };
-
-        static void SetCancelFlag(int value)
+        private SensorStream sensorStream_ = new SensorStream();
+        void SetCancelFlag(int value)
         {
             lock (lock_)
             {
@@ -23,20 +23,25 @@ namespace MachineParts
             }
         }
 
-        static int GetCancelFlag()
+        int GetCancelFlag()
         {
             lock (lock_)
             {
                 return cancel_;
             }
         }
-
-        public MillComponent(string name, MainComponent mainComponent) : base(mainComponent, name) 
+        public void StartStream()
         {
-            SensorStream sensorStream = new SensorStream();
-            sensorStream.temperatureCallBck_ += ProcessTemperatureStream;
-            sensorStream.Start();
-            mainComponent_?.AddComponent("All", message => ReceiveMessage(message));
+            sensorStream_.Start();
+        }
+        public void StopStream()
+        {
+            sensorStream_.Stop();
+        }
+        public MillComponent(string name, MainComponent mainComponent) : base(mainComponent, name)
+        {
+            sensorStream_.temperatureCallBck_ += ProcessTemperatureStream;
+            mainComponent_?.AddComponent(name, message => ReceiveMessage(message));
         }
 
         public override void ReceiveMessage(Message message)
@@ -53,7 +58,7 @@ namespace MachineParts
             {
                 SetCancelFlag(1);
             }
-            
+
         }
 
         public override void SendMessage(Message message)
@@ -66,9 +71,9 @@ namespace MachineParts
         public override void Start()
         {
             Running = true;
-            Message.MsgHeader msgHeader = new Message.MsgHeader(DateTime.Now,Name, Guid.NewGuid(), false, Message.Type.EEvent);
+            Message.MsgHeader msgHeader = new Message.MsgHeader(DateTime.Now, Name, Guid.NewGuid(), false, Message.Type.EEvent);
             Message.MsgBody msgBody = new Message.MsgBody($"{Name} {status_[0]}");
-            Message message = new Message(msgHeader, msgBody);  
+            Message message = new Message(msgHeader, msgBody);
             SendMessage(message);
         }
 
@@ -84,7 +89,7 @@ namespace MachineParts
         public string MillJob(int jobId)
         {
             if (!Running) return "Mill is not yet started";
-            if(jobId <= 0) return "Invalid job id";
+            if (jobId <= 0) return "Invalid job id";
             if (jobId_ > 0) return "Other job is in progress";
 
             Task.Run(() =>
@@ -98,7 +103,7 @@ namespace MachineParts
                     SendMessage(message);
                 }
 
-                for(int i = 0; i < 10; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     Thread.Sleep(1000);
                     if (GetCancelFlag() == 1)
@@ -107,9 +112,9 @@ namespace MachineParts
                         Message.MsgHeader msgHeader = new Message.MsgHeader(DateTime.Now, Name, Guid.NewGuid());
                         Message.MsgBody msgBody = new Message.MsgBody($"{Name} {status_[2]} {jobId} as cancelled");
                         Message message = new Message(msgHeader, msgBody);
-                        DBJob job = new DBJob(jobId_, start, end, Name, "Complete");
+                        DBJob job = new DBJob(jobId_, start, end, Name, "Cancelled");
                         mainComponent_?.AddJobToDb(job);
-                        SendMessage(message);                    
+                        SendMessage(message);
                         break;
                     }
                 }
@@ -121,12 +126,12 @@ namespace MachineParts
                     Message.MsgBody msgBody = new Message.MsgBody($"{Name} {status_[2]} job {jobId_}");
                     Message message = new Message(msgHeader, msgBody);
                     SendMessage(message);
-                    DBJob job = new DBJob(jobId_,start,end,Name,"Complete");
+                    DBJob job = new DBJob(jobId_, start, end, Name, "Complete");
                     mainComponent_?.AddJobToDb(job);
                 }
                 jobId_ = -1;
                 SetCancelFlag(0);
-               
+
             });
             return string.Empty;
         }
@@ -154,8 +159,9 @@ namespace MachineParts
             Task.Run(() =>
             {
                 Console.WriteLine($" {Name} Processing {dataStream}");
+
             });
         }
-       
+
     }
 }

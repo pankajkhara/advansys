@@ -8,34 +8,57 @@ namespace MachineParts
     {
         static async Task Main(string[] args)
         {
+            try
+            {
+                File.Delete("localdatabase.db");
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+            }
+            
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
 
+
+            List<MillComponent> components = new List<MillComponent>();
             int jobNumber = 10000;
             string? numMillsStr = configuration["NumMills"];
             if (!string.IsNullOrEmpty(numMillsStr))
             {
                 var numMills = int.Parse(numMillsStr);
                 MainComponent mainComponent = new MainComponent("main");
-
                 mainComponent.Init();
                 int i = 0;
                 for (; i < numMills - 1; i++)
                 {
                     MillComponent mill = new MillComponent("Mill" + i.ToString(), mainComponent);
-                    mill.Start();
-                    await mill.Caliberate();
+                    mill.StartStream(); // test stream
+                    components.Add(mill);
+                    mill.Start(); // test Event
+                    await mill.Caliberate(); // test Message
                     mill.MillJob(jobNumber++);
-                    mill.Stop();
+                    mill.Stop(); // test Event
+
                 }
 
                 MillComponent mill1 = new MillComponent("Mill" + i.ToString(), mainComponent);
-                mill1.Start();
+                mill1.StartStream(); // test stream
+                components.Add(mill1);
+                mill1.Start();// Event
                 mill1.MillJob(jobNumber++);
-                mainComponent.CancelJob();
-                mill1.Stop();
+                mainComponent.CancelJob(); // test of prioritization and round trip command feedback
+               
+
+                //test stop stream and cleanup
+                //foreach (var mill in components)
+                //{
+                //    mill.StopStream();
+                //    mainComponent.RemoveComponent(mill.Name);
+                //}
             }
             else
             {

@@ -21,6 +21,8 @@ namespace MachineParts
         private ConcurrentDictionary<string, Action<Message>> Components { get; } = new ConcurrentDictionary<string, Action<Message>>();
         private ConcurrentQueue<Message> MessagesNormal { get; } = new ConcurrentQueue<Message>();
         private ConcurrentQueue<Message> MessagesPriority { get; } = new ConcurrentQueue<Message>();
+        private static readonly object lockObject = new object();
+
         public bool AddComponent(string name , Action<Message> handleMessage)
         {
             bool add = false;
@@ -34,14 +36,14 @@ namespace MachineParts
 
         public bool RemoveComponent(string name)
         {
-            bool add = false;
+            bool remove = false;
             if (Components.ContainsKey(name))
             {
                 var kvp = new KeyValuePair<string, Action<Message>>(name, Components[name]);
                 Components.TryRemove(kvp);
-                add = true;
+                remove = true;
             }
-            return add;
+            return remove;
         }
 
         public void ReceiveMessage(Message message)
@@ -63,7 +65,7 @@ namespace MachineParts
 
         public void SendMessage(Message message)
         {
-            if (Components.ContainsKey("All"))
+            if (Components.Count > 0)
             { 
                 foreach (var handler in Components.Values)
                 {
@@ -111,11 +113,14 @@ namespace MachineParts
         {
             try
             {
-                using (var context = new ApplicationDbContext())
+                lock (lockObject)
                 {
-                    context.Database.EnsureCreated();
-                    JobRepo repo = new JobRepo(context);
-                    repo.Add(job);
+                    using (var context = new ApplicationDbContext())
+                    {
+                        context.Database.EnsureCreated();
+                        JobRepo repo = new JobRepo(context);
+                        repo.Add(job);
+                    }
                 }
             }
             catch (Exception ex)
