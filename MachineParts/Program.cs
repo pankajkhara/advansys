@@ -7,28 +7,18 @@ namespace MachineParts
 {
     public class Program
     {
-        public static byte[] Generate256BitKey()
-        {
-            byte[] key = new byte[32]; // 32 bytes for 256 bits
-
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(key);
-            }
-
-            return key;
-        }
+        
         static async Task Main(string[] args)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
 
-            // test encrption decrption
-            string originalText = "Hello, this is a secret message!";
+            // test encrption decrption so far not integrate with message structure 
+            string originalText = "a secret message!";
             string? key = configuration["EncryptKey"];
 
-            if(!string.IsNullOrEmpty(key)) 
+            if (!string.IsNullOrEmpty(key))
             {
-          
+
                 // Generate a secure random key for AES-128
                 using (Aes aes = Aes.Create())
                 {
@@ -39,6 +29,7 @@ namespace MachineParts
                     Console.WriteLine("Decrypted Text: " + decryptedText);
                 }
             }
+
             try
             {
                 File.Delete("localdatabase.db"); // destroying every time to avoid
@@ -51,7 +42,7 @@ namespace MachineParts
 
             List<MillComponent> components = new List<MillComponent>();
             int jobNumber = 10000;
-            string? numMillsStr = configuration["NumMills"];
+            string? numMillsStr = configuration["NumMills"];// no of mills can be configured via this setting
             if (!string.IsNullOrEmpty(numMillsStr))
             {
                 var numMills = int.Parse(numMillsStr);
