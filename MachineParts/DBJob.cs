@@ -25,10 +25,7 @@ namespace MachineParts
         public DbSet<DBJob> Jobs { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
+            var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
 
             var databaseProvider = configuration["DatabaseProvider"];
             if (!string.IsNullOrEmpty(databaseProvider))

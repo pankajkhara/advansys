@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,7 @@ namespace MachineParts
         private ConcurrentQueue<Message> MessagesNormal { get; } = new ConcurrentQueue<Message>();
         private ConcurrentQueue<Message> MessagesPriority { get; } = new ConcurrentQueue<Message>();
         private static readonly object lockObject = new object();
+        IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
 
         public bool AddComponent(string name , Action<Message> handleMessage)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace MachineParts
         private readonly object lock_ = new object();
         string[] status_ = new string[] { "MillStarted", "JobStart", "JobFinish", "MillStopped" };
         private SensorStream sensorStream_ = new SensorStream();
+
         void SetCancelFlag(int value)
         {
             lock (lock_)
